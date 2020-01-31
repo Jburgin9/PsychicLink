@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnT
     @Override
     public void onSelectionMade(String theme) {
         if(!theme.equals("-")) {
-            SecondFragment secondFragment = SecondFragment.getInstance(theme);
+            SecondFragment secondFragment = SecondFragment.newInstance(theme);
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.main_frame_layout, secondFragment);

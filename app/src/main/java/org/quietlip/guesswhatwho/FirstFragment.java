@@ -63,8 +63,11 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selection = "";
         if(!parent.getItemAtPosition(position).equals("-")){
-            selectedListener.onSelectionMade(parent.getItemAtPosition(position).toString());
+            selection = parent.getItemAtPosition(position).toString();
+            selectedListener.onSelectionMade(selection);
+            parent.setSelection(0);
         }
     }
 
