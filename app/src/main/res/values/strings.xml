@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GuessWhatWho</string>
+    <string name="spinner_theme_select">Select A Theme</string>
+
+    <string-array name="spinner_selection">
+        <item>-</item>
+        <item>Education</item>
+        <item>Pairs</item>
+        <item>Music</item>
+        <item>Characters</item>
+    </string-array>
+</resources>
