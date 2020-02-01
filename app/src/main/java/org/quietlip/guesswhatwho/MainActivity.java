@@ -1,4 +1,4 @@
-package org.quietlip.guesswhatwho.views;
+package org.quietlip.guesswhatwho;
 
 import android.os.Bundle;
 
@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import org.quietlip.guesswhatwho.FirstFragment;
-import org.quietlip.guesswhatwho.R;
-import org.quietlip.guesswhatwho.SecondFragment;
+import org.quietlip.guesswhatwho.frags.FirstFragment;
+import org.quietlip.guesswhatwho.frags.SecondFragment;
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener {
     @Override

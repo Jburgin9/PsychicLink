@@ -1,4 +1,4 @@
-package org.quietlip.guesswhatwho;
+package org.quietlip.guesswhatwho.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
