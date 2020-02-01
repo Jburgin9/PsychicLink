@@ -4,7 +4,7 @@
 
     <string-array name="spinner_selection">
         <item>-</item>
-        <item>Education</item>
+        <item>Cars</item>
         <item>Pairs</item>
         <item>Music</item>
         <item>Characters</item>
