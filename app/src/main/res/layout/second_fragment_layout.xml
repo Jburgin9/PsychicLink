@@ -125,7 +125,9 @@
         android:layout_height="wrap_content"
         android:hint="Your Guess?"
         android:layout_below="@id/image_holder"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:inputType="number"
+        android:maxLength="1"/>
 
     <Button
         android:id="@+id/submit_guess_btn"
