@@ -12,11 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.quietlip.guesswhatwho.db.GameDatabase;
 import org.quietlip.guesswhatwho.R;
 
 public class FirstFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-    private GameDatabase gameDb;
     private View view;
     private Spinner spinner;
     private OnThemeSelectedListener selectedListener;
@@ -29,13 +27,6 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        gameDb = new GameDatabase(view.getContext());
-
-//        SQLiteDatabase db = gameDb.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_ROUND, "1");
-//        db.insert(DatabaseContract.GameEntry.TABLE_NAME, null, values);
     }
 
     @Nullable
