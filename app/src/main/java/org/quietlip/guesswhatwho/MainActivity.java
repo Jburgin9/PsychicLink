@@ -10,8 +10,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.quietlip.guesswhatwho.frags.FirstFragment;
 import org.quietlip.guesswhatwho.frags.SecondFragment;
+import org.quietlip.guesswhatwho.frags.ThirdFragment;
 
-public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener {
+public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener,
+SecondFragment.OnCompletedListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,11 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnT
         if(fragment instanceof FirstFragment){
             FirstFragment firstFragment = (FirstFragment) fragment;
             firstFragment.setThemeListener(this);
+        } else if (fragment instanceof SecondFragment){
+            SecondFragment secondFragment = (SecondFragment) fragment;
+            secondFragment.setCompletedListener(this);
+        } else {
+            ThirdFragment thirdFragment = (ThirdFragment) fragment;
         }
     }
 
@@ -52,5 +59,15 @@ public class MainActivity extends AppCompatActivity implements FirstFragment.OnT
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onComplete() {
+        ThirdFragment fragment = ThirdFragment.newInstance();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.main_frame_layout, fragment);
+        transaction.addToBackStack("third");
+        transaction.commit();
     }
 }

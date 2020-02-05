@@ -1,14 +1,14 @@
 package org.quietlip.guesswhatwho.frags;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +23,8 @@ import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.db.GameDatabase;
 
 import java.util.Random;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * TODO: Fix pictures layout to fix to one size for all 4 images
@@ -39,13 +41,14 @@ public class SecondFragment extends Fragment {
     private Button submitGuessBtn;
     private int cpuSelection;
     private GameDatabase gameDb;
-    private GameDatabase database;
     private ContentValues values;
-    private int roundCount = 0;
-    private SQLiteDatabase dbWrite, dbRead;
-    private Cursor cursor;
+    private int roundCount, wins = 0;
+    private SQLiteDatabase dbWrite;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
+    private OnCompletedListener listener;
+
+    public void setCompletedListener(OnCompletedListener listener) {this.listener = listener;}
 
 
     public static SecondFragment newInstance(String theme) {
@@ -64,11 +67,14 @@ public class SecondFragment extends Fragment {
         }
         Random rando = new Random();
         cpuSelection = rando.nextInt(3);
-        database = new GameDatabase(view.getContext());
-        dbWrite = gameDb.getWritableDatabase();
-        dbRead = gameDb.getReadableDatabase();
         values = new ContentValues();
-        preferences = view.getContext().getSharedPreferences("guess", Context.MODE_PRIVATE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
     @Nullable
@@ -83,6 +89,9 @@ public class SecondFragment extends Fragment {
         choice4Iv = view.findViewById(R.id.display_image_4);
         userGuessEt = view.findViewById(R.id.user_guess_et);
         submitGuessBtn = view.findViewById(R.id.submit_guess_btn);
+//        gameDb = new GameDatabase(view.getContext());
+//        dbWrite = gameDb.getWritableDatabase();
+//        preferences = view.getContext().getSharedPreferences("guess", Context.MODE_PRIVATE);
         return view;
     }
 
@@ -118,7 +127,7 @@ public class SecondFragment extends Fragment {
     }
 
     private void selectImage() {
-        int selection = 0;
+//       editor = preferences.edit();
 /*
         Map<Integer, Integer> imagesNumberMap = new HashMap<>();
         imagesNumberMap.put(1, R.drawable.car1);
@@ -127,39 +136,38 @@ public class SecondFragment extends Fragment {
         imagesNumberMap.put(4, R.drawable.car4);
 */
         if (!userGuessEt.getText().toString().equals("")) {
-            selection = Integer.parseInt(userGuessEt.getText().toString());
-                if (selection == cpuSelection) {
-                    Toast.makeText(view.getContext(), "Correct", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(view.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
-                }
+            roundCount++;
+            int selection = Integer.parseInt(userGuessEt.getText().toString());
+//            editor.putInt("userSelect", selection);
+//            editor.putInt("cpuSelect", cpuSelection);
+            Log.d(TAG, "selectImage: " + cpuSelection);
+            if (selection == cpuSelection) {
+                Toast.makeText(view.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+                wins++;
+            } else {
+                Toast.makeText(view.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+//                editor.putInt("selectionCorrect", 0);
             }
+        }
+        double avg = wins/roundCount;
+        Log.d(TAG, "selectImage: " + wins + "/" + roundCount);
+//        editor.apply();
+        listener.onComplete();
     }
 
-//    public int getRoundId(int roundId){
-//        int updatedSelection = 0;
-//        String[] projection = {
-//                DatabaseContract.GameEntry._ID
-//        };
-//        String querySelction = DatabaseContract.GameEntry._ID + " = ?";
-//        String[] selectionArgs = { String.valueOf(roundId) };
-//        String sortOrder = DatabaseContract.GameEntry._ID + " ASC";
+//    public void sendDataToDB() {
+//        int userGuess = preferences.getInt("userSelect", 0);
+//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS, userGuess);
 //
-//        cursor = dbRead.query(
-//                DatabaseContract.GameEntry.TABLE_NAME,
-//                projection,
-//                querySelction,
-//                selectionArgs,
-//                null,
-//                null,
-//                sortOrder
-//        );
+//        int cpuGuess = preferences.getInt("cpuSelect", 0);
+//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS, cpuGuess);
 //
-//        while(cursor.moveToNext()){
-////            updatedSelection = cursor;
-//        }
-//
-//        return 0;
+//        int guessCheck = preferences.getInt("selectionCorrect", -1);
+//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS_CORRECT, guessCheck);
 //    }
+
+    public interface OnCompletedListener {
+        void onComplete();
+    }
 
 }
