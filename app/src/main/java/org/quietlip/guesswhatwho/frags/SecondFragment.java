@@ -1,8 +1,7 @@
 package org.quietlip.guesswhatwho.frags;
 
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.quietlip.guesswhatwho.R;
-import org.quietlip.guesswhatwho.db.GameDatabase;
+import org.quietlip.guesswhatwho.utilis.GameConstants;
 
 import java.util.Random;
 
@@ -40,10 +39,7 @@ public class SecondFragment extends Fragment {
     private EditText userGuessEt;
     private Button submitGuessBtn;
     private int cpuSelection;
-    private GameDatabase gameDb;
-    private ContentValues values;
     private int roundCount, wins = 0;
-    private SQLiteDatabase dbWrite;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private OnCompletedListener listener;
@@ -67,7 +63,6 @@ public class SecondFragment extends Fragment {
         }
         Random rando = new Random();
         cpuSelection = rando.nextInt(3);
-        values = new ContentValues();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
@@ -89,9 +84,7 @@ public class SecondFragment extends Fragment {
         choice4Iv = view.findViewById(R.id.display_image_4);
         userGuessEt = view.findViewById(R.id.user_guess_et);
         submitGuessBtn = view.findViewById(R.id.submit_guess_btn);
-//        gameDb = new GameDatabase(view.getContext());
-//        dbWrite = gameDb.getWritableDatabase();
-//        preferences = view.getContext().getSharedPreferences("guess", Context.MODE_PRIVATE);
+        preferences = view.getContext().getSharedPreferences(GameConstants.GAME_DATA_PREF, Context.MODE_PRIVATE);
         return view;
     }
 
@@ -127,47 +120,31 @@ public class SecondFragment extends Fragment {
     }
 
     private void selectImage() {
-//       editor = preferences.edit();
-/*
-        Map<Integer, Integer> imagesNumberMap = new HashMap<>();
-        imagesNumberMap.put(1, R.drawable.car1);
-        imagesNumberMap.put(2, R.drawable.car2);
-        imagesNumberMap.put(3, R.drawable.car3);
-        imagesNumberMap.put(4, R.drawable.car4);
-*/
+        int selection = 0;
+       editor = preferences.edit();
         if (!userGuessEt.getText().toString().equals("")) {
             roundCount++;
-            int selection = Integer.parseInt(userGuessEt.getText().toString());
-//            editor.putInt("userSelect", selection);
-//            editor.putInt("cpuSelect", cpuSelection);
+            selection = Integer.parseInt(userGuessEt.getText().toString());
+            editor.putInt("userSelect", selection);
+            editor.putInt("cpuSelect", cpuSelection);
             Log.d(TAG, "selectImage: " + cpuSelection);
             if (selection == cpuSelection) {
                 Toast.makeText(view.getContext(), "Correct", Toast.LENGTH_SHORT).show();
+                editor.putInt(GameConstants.SELECTION_WIN, wins);
                 wins++;
             } else {
                 Toast.makeText(view.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
-//                editor.putInt("selectionCorrect", 0);
+                editor.putInt(GameConstants.SELECTION_LOSS, roundCount);
             }
         }
-        double avg = wins/roundCount;
-        Log.d(TAG, "selectImage: " + wins + "/" + roundCount);
-//        editor.apply();
+        editor.apply();
         listener.onComplete();
+        listener.sendToDb(wins, roundCount, selection, cpuSelection);
     }
-
-//    public void sendDataToDB() {
-//        int userGuess = preferences.getInt("userSelect", 0);
-//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS, userGuess);
-//
-//        int cpuGuess = preferences.getInt("cpuSelect", 0);
-//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS, cpuGuess);
-//
-//        int guessCheck = preferences.getInt("selectionCorrect", -1);
-//        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS_CORRECT, guessCheck);
-//    }
 
     public interface OnCompletedListener {
         void onComplete();
+        void sendToDb(int win, int rounds, int userGuess, int cpuGuess);
     }
 
 }
