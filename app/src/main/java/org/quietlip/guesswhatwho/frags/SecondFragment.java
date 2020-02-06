@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +38,7 @@ public class SecondFragment extends Fragment {
     private EditText userGuessEt;
     private Button submitGuessBtn;
     private int cpuSelection;
-    private int roundCount, wins = 0;
+    private int roundCount, wins;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private OnCompletedListener listener;
@@ -58,12 +57,13 @@ public class SecondFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         if (getArguments() != null) {
             theme = getArguments().getString(THEME_KEY);
         }
         Random rando = new Random();
         cpuSelection = rando.nextInt(3);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
@@ -91,6 +91,11 @@ public class SecondFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(preferences.contains(GameConstants.SELECTION_LOSS) && preferences.contains(GameConstants.SELECTION_WIN)){
+            roundCount = preferences.getInt(GameConstants.SELECTION_LOSS, 0);
+            wins = preferences.getInt(GameConstants.SELECTION_WIN, 0);
+        }
+
         displayTv.setText(theme);
         setThemeImages(theme);
         submitGuessBtn.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +104,6 @@ public class SecondFragment extends Fragment {
                 selectImage();
             }
         });
-
     }
 
     private void setThemeImages(String theme) {
@@ -121,6 +125,7 @@ public class SecondFragment extends Fragment {
 
     private void selectImage() {
         int selection = 0;
+        int gameResult = -1;
        editor = preferences.edit();
         if (!userGuessEt.getText().toString().equals("")) {
             roundCount++;
@@ -129,22 +134,22 @@ public class SecondFragment extends Fragment {
             editor.putInt("cpuSelect", cpuSelection);
             Log.d(TAG, "selectImage: " + cpuSelection);
             if (selection == cpuSelection) {
-                Toast.makeText(view.getContext(), "Correct", Toast.LENGTH_SHORT).show();
-                editor.putInt(GameConstants.SELECTION_WIN, wins);
                 wins++;
+                gameResult = 1;
+                editor.putInt(GameConstants.SELECTION_WIN, wins);
             } else {
-                Toast.makeText(view.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
+                gameResult = 0;
                 editor.putInt(GameConstants.SELECTION_LOSS, roundCount);
             }
         }
         editor.apply();
         listener.onComplete();
-        listener.sendToDb(wins, roundCount, selection, cpuSelection);
+        listener.sendToDb(wins, roundCount, gameResult);
     }
 
     public interface OnCompletedListener {
         void onComplete();
-        void sendToDb(int win, int rounds, int userGuess, int cpuGuess);
+        void sendToDb(int win, int rounds, int gameResult);
     }
 
 }
