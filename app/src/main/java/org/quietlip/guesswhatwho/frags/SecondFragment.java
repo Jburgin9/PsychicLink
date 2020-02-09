@@ -3,7 +3,6 @@ package org.quietlip.guesswhatwho.frags;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;
 
 import java.util.Random;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * TODO: Fix pictures layout to fix to one size for all 4 images
@@ -91,8 +88,8 @@ public class SecondFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(preferences.contains(GameConstants.SELECTION_LOSS) && preferences.contains(GameConstants.SELECTION_WIN)){
-            roundCount = preferences.getInt(GameConstants.SELECTION_LOSS, 0);
+        if(preferences.contains(GameConstants.ROUND_COUNT) && preferences.contains(GameConstants.SELECTION_WIN)){
+            roundCount = preferences.getInt(GameConstants.ROUND_COUNT, 0);
             wins = preferences.getInt(GameConstants.SELECTION_WIN, 0);
         }
 
@@ -116,30 +113,39 @@ public class SecondFragment extends Fragment {
                     choice3Iv.setImageResource(R.drawable.car3);
                     choice4Iv.setImageResource(R.drawable.car4);
                     break;
-                case "Sports":
-//                    choice1Iv.setImageResource(R.drawable.car1);
+                case "Music":
+                    choice1Iv.setImageResource(R.drawable.music1);
+                    choice2Iv.setImageResource(R.drawable.music2);
+                    choice3Iv.setImageResource(R.drawable.music3);
+                    choice4Iv.setImageResource(R.drawable.music4);
+                    break;
+                case "Pairs":
+                    choice1Iv.setImageResource(R.drawable.pair1);
+                    choice2Iv.setImageResource(R.drawable.pair2);
+                    choice3Iv.setImageResource(R.drawable.pair3);
+                    choice4Iv.setImageResource(R.drawable.pair4);
                     break;
             }
         }
     }
 
     private void selectImage() {
-        int selection = 0;
+        roundCount++;
+        if(cpuSelection == 0) cpuSelection = 1;
+        int selection;
         int gameResult = -1;
        editor = preferences.edit();
         if (!userGuessEt.getText().toString().equals("")) {
-            roundCount++;
             selection = Integer.parseInt(userGuessEt.getText().toString());
             editor.putInt("userSelect", selection);
             editor.putInt("cpuSelect", cpuSelection);
-            Log.d(TAG, "selectImage: " + cpuSelection);
             if (selection == cpuSelection) {
                 wins++;
                 gameResult = 1;
                 editor.putInt(GameConstants.SELECTION_WIN, wins);
             } else {
                 gameResult = 0;
-                editor.putInt(GameConstants.SELECTION_LOSS, roundCount);
+                editor.putInt(GameConstants.ROUND_COUNT, roundCount);
             }
         }
         editor.apply();

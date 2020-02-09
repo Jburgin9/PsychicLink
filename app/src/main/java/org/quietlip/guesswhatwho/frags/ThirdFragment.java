@@ -3,7 +3,6 @@ package org.quietlip.guesswhatwho.frags;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +56,7 @@ public class ThirdFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         String[] projection = {
-                BaseColumns._ID,
+//                BaseColumns._ID,
                 DatabaseContract.GameEntry.COLUMN_NAME_WINS,
                 DatabaseContract.GameEntry.COLUMN_NAME_ROUNDS,
                 DatabaseContract.GameEntry.COLUMN_NAME_GUESS_RESULT

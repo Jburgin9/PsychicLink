@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,7 +55,6 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
         if(preferences.contains(GameConstants.SELECTION_WIN) || preferences.contains(GameConstants.SELECTION_LOSS)){
             int result = preferences.getInt(GameConstants.SELECTION_WIN, 0);
             int rounds = preferences.getInt(GameConstants.SELECTION_LOSS, -1);
-            Toast.makeText(view.getContext(), result + "/" + rounds, Toast.LENGTH_SHORT).show();
         }
     }
 

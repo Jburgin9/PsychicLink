@@ -11,7 +11,7 @@ public class DatabaseContract {
         public static final String COLUMN_NAME_CPU_GUESS = "cpu_guess";
         public static final String COLUMN_NAME_WINS = "wins";
         public static final String COLUMN_NAME_ROUNDS = "rounds";
-        public static final String COLUMN_NAME_GUESS_RESULT = "guess_result";
+        public static final String COLUMN_NAME_GUESS_RESULT = "result";
     }
 
     static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
@@ -19,9 +19,9 @@ public class DatabaseContract {
             GameEntry.COLUMN_NAME_USER_GUESS + " INTEGER," +
             GameEntry.COLUMN_NAME_CPU_GUESS + " INTEGER," +
             GameEntry.COLUMN_NAME_WINS + " INTEGER," +
-            GameEntry.COLUMN_NAME_ROUNDS + " INTEGER, " +
+            GameEntry.COLUMN_NAME_ROUNDS + " INTEGER," +
             // 0 (FALSE) && 1 (TRUE)
-            GameEntry.COLUMN_NAME_GUESS_RESULT + "INTEGER)";
+            GameEntry.COLUMN_NAME_GUESS_RESULT + " INTEGER)";
 
     static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + GameEntry.TABLE_NAME;
 
