@@ -3,7 +3,6 @@ package org.quietlip.guesswhatwho.frags;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +20,6 @@ import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;
 
 import java.util.Random;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * TODO: Fix pictures layout to fix to one size for all 4 images
@@ -39,7 +35,7 @@ public class SecondFragment extends Fragment {
     private EditText userGuessEt;
     private Button submitGuessBtn;
     private int cpuSelection;
-    private int roundCount, wins = 0;
+    private int roundCount, wins;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private OnCompletedListener listener;
@@ -58,12 +54,13 @@ public class SecondFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         if (getArguments() != null) {
             theme = getArguments().getString(THEME_KEY);
         }
         Random rando = new Random();
         cpuSelection = rando.nextInt(3);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
@@ -91,6 +88,11 @@ public class SecondFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(preferences.contains(GameConstants.ROUND_COUNT) && preferences.contains(GameConstants.SELECTION_WIN)){
+            roundCount = preferences.getInt(GameConstants.ROUND_COUNT, 0);
+            wins = preferences.getInt(GameConstants.SELECTION_WIN, 0);
+        }
+
         displayTv.setText(theme);
         setThemeImages(theme);
         submitGuessBtn.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +101,6 @@ public class SecondFragment extends Fragment {
                 selectImage();
             }
         });
-
     }
 
     private void setThemeImages(String theme) {
@@ -112,39 +113,49 @@ public class SecondFragment extends Fragment {
                     choice3Iv.setImageResource(R.drawable.car3);
                     choice4Iv.setImageResource(R.drawable.car4);
                     break;
-                case "Sports":
-//                    choice1Iv.setImageResource(R.drawable.car1);
+                case "Music":
+                    choice1Iv.setImageResource(R.drawable.music1);
+                    choice2Iv.setImageResource(R.drawable.music2);
+                    choice3Iv.setImageResource(R.drawable.music3);
+                    choice4Iv.setImageResource(R.drawable.music4);
+                    break;
+                case "Pairs":
+                    choice1Iv.setImageResource(R.drawable.pair1);
+                    choice2Iv.setImageResource(R.drawable.pair2);
+                    choice3Iv.setImageResource(R.drawable.pair3);
+                    choice4Iv.setImageResource(R.drawable.pair4);
                     break;
             }
         }
     }
 
     private void selectImage() {
-        int selection = 0;
+        roundCount++;
+        if(cpuSelection == 0) cpuSelection = 1;
+        int selection;
+        int gameResult = -1;
        editor = preferences.edit();
         if (!userGuessEt.getText().toString().equals("")) {
-            roundCount++;
             selection = Integer.parseInt(userGuessEt.getText().toString());
             editor.putInt("userSelect", selection);
             editor.putInt("cpuSelect", cpuSelection);
-            Log.d(TAG, "selectImage: " + cpuSelection);
             if (selection == cpuSelection) {
-                Toast.makeText(view.getContext(), "Correct", Toast.LENGTH_SHORT).show();
-                editor.putInt(GameConstants.SELECTION_WIN, wins);
                 wins++;
+                gameResult = 1;
+                editor.putInt(GameConstants.SELECTION_WIN, wins);
             } else {
-                Toast.makeText(view.getContext(), "Incorrect", Toast.LENGTH_SHORT).show();
-                editor.putInt(GameConstants.SELECTION_LOSS, roundCount);
+                gameResult = 0;
+                editor.putInt(GameConstants.ROUND_COUNT, roundCount);
             }
         }
         editor.apply();
         listener.onComplete();
-        listener.sendToDb(wins, roundCount, selection, cpuSelection);
+        listener.sendToDb(wins, roundCount, gameResult);
     }
 
     public interface OnCompletedListener {
         void onComplete();
-        void sendToDb(int win, int rounds, int userGuess, int cpuGuess);
+        void sendToDb(int win, int rounds, int gameResult);
     }
 
 }

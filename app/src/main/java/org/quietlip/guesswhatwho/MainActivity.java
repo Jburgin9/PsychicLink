@@ -21,7 +21,6 @@ SecondFragment.OnCompletedListener {
     private GameDatabase gameDatabase;
     private SQLiteDatabase sqLiteDatabase;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,12 +81,17 @@ SecondFragment.OnCompletedListener {
     }
 
     @Override
-    public void sendToDb(int win, int rounds, int userGuess, int cpuGuess) {
+    public void sendToDb(int win, int rounds, int gameResult) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.GameEntry.COLUMN_NAME_WINS, win);
         values.put(DatabaseContract.GameEntry.COLUMN_NAME_ROUNDS, rounds);
-        values.put(DatabaseContract.GameEntry.COLUMN_NAME_USER_GUESS, userGuess);
-        values.put(DatabaseContract.GameEntry.COLUMN_NAME_CPU_GUESS, cpuGuess);
+        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS_RESULT, gameResult);
         sqLiteDatabase.insert(DatabaseContract.GameEntry.TABLE_NAME, null, values);
+    }
+
+    @Override
+    protected void onDestroy() {
+        sqLiteDatabase.close();
+        super.onDestroy();
     }
 }

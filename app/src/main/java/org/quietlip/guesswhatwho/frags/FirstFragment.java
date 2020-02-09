@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,11 +52,9 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(this);
-        if(preferences.contains(GameConstants.SELECTION_WIN)){
-            int result = preferences.getInt(GameConstants.SELECTION_WIN, -1);
-            Toast.makeText(view.getContext(), String.valueOf(result), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(view.getContext(), "no results found", Toast.LENGTH_SHORT).show();
+        if(preferences.contains(GameConstants.SELECTION_WIN) || preferences.contains(GameConstants.SELECTION_LOSS)){
+            int result = preferences.getInt(GameConstants.SELECTION_WIN, 0);
+            int rounds = preferences.getInt(GameConstants.SELECTION_LOSS, -1);
         }
     }
 
