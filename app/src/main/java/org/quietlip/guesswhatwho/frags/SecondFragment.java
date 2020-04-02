@@ -3,12 +3,11 @@ package org.quietlip.guesswhatwho.frags;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,14 +26,13 @@ import java.util.Random;
  */
 
 public class SecondFragment extends Fragment {
+    public static final String TAG = "click";
     public static final String THEME_KEY = "theme";
     private View view;
     private String theme;
     private TextView displayTv;
     private ImageView choice1Iv, choice2Iv, choice3Iv, choice4Iv;
-    private EditText userGuessEt;
-    private Button submitGuessBtn;
-    private int cpuSelection;
+    private int cpuSelection, selection;
     private int roundCount, wins;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -79,28 +77,31 @@ public class SecondFragment extends Fragment {
         choice2Iv = view.findViewById(R.id.display_image_2);
         choice3Iv = view.findViewById(R.id.display_image_3);
         choice4Iv = view.findViewById(R.id.display_image_4);
-        userGuessEt = view.findViewById(R.id.user_guess_et);
-        submitGuessBtn = view.findViewById(R.id.submit_guess_btn);
         preferences = view.getContext().getSharedPreferences(GameConstants.GAME_DATA_PREF, Context.MODE_PRIVATE);
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(preferences.contains(GameConstants.ROUND_COUNT) && preferences.contains(GameConstants.SELECTION_WIN)){
             roundCount = preferences.getInt(GameConstants.ROUND_COUNT, 0);
             wins = preferences.getInt(GameConstants.SELECTION_WIN, 0);
         }
+//        choice1Iv.setOnClickListener(this);
+        choice1Iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: yup");
+            }
+        });
 
         displayTv.setText(theme);
         setThemeImages(theme);
-        submitGuessBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        setImage1ClickAction();
+        setImage2ClickAction();
+        setImage3ClickAction();
+        setImage4ClickAction();
     }
 
     private void setThemeImages(String theme) {
@@ -129,29 +130,110 @@ public class SecondFragment extends Fragment {
         }
     }
 
-    private void selectImage() {
-        roundCount++;
-        if(cpuSelection == 0) cpuSelection = 1;
-        int selection;
-        int gameResult = -1;
-       editor = preferences.edit();
-        if (!userGuessEt.getText().toString().equals("")) {
-            selection = Integer.parseInt(userGuessEt.getText().toString());
-            editor.putInt("userSelect", selection);
-            editor.putInt("cpuSelect", cpuSelection);
-            if (selection == cpuSelection) {
-                wins++;
-                gameResult = 1;
-                editor.putInt(GameConstants.SELECTION_WIN, wins);
-            } else {
-                gameResult = 0;
-                editor.putInt(GameConstants.ROUND_COUNT, roundCount);
-            }
-        }
-        editor.apply();
-        listener.onComplete();
-        listener.sendToDb(wins, roundCount, gameResult);
+    public void setImage1ClickAction(){
+        choice1Iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundCount++;
+//                if(cpuSelection == 0) cpuSelection = 1;
+                int gameResult = -2;
+                selection = 1;
+                editor = preferences.edit();
+                editor.putInt("userSelect", selection);
+                editor.putInt("cpuSelect", cpuSelection);
+                if (selection == cpuSelection) {
+                    wins++;
+                    gameResult = 1;
+                    editor.putInt(GameConstants.SELECTION_WIN, wins);
+                    } else {
+                    gameResult = 0;
+                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
+                    }
+                editor.apply();
+                listener.onComplete();
+                listener.sendToDb(wins, roundCount, gameResult);
+                }
+        });
     }
+
+    public void setImage2ClickAction(){
+        choice2Iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundCount++;
+//                if(cpuSelection == 0) cpuSelection = 1;
+                int gameResult = -2;
+                selection = 2;
+                editor = preferences.edit();
+                editor.putInt("userSelect", selection);
+                editor.putInt("cpuSelect", cpuSelection);
+                if (selection == cpuSelection) {
+                    wins++;
+                    gameResult = 1;
+                    editor.putInt(GameConstants.SELECTION_WIN, wins);
+                } else {
+                    gameResult = 0;
+                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
+                }
+                editor.apply();
+                listener.onComplete();
+                listener.sendToDb(wins, roundCount, gameResult);
+            }
+        });
+    }
+
+    public void setImage3ClickAction(){
+        choice3Iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundCount++;
+//                if(cpuSelection == 0) cpuSelection = 1;
+                int gameResult = -2;
+                selection = 3;
+                editor = preferences.edit();
+                editor.putInt("userSelect", selection);
+                editor.putInt("cpuSelect", cpuSelection);
+                if (selection == cpuSelection) {
+                    wins++;
+                    gameResult = 1;
+                    editor.putInt(GameConstants.SELECTION_WIN, wins);
+                } else {
+                    gameResult = 0;
+                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
+                }
+                editor.apply();
+                listener.onComplete();
+                listener.sendToDb(wins, roundCount, gameResult);
+            }
+        });
+    }
+
+    public void setImage4ClickAction(){
+        choice4Iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundCount++;
+//                if(cpuSelection == 0) cpuSelection = 1;
+                int gameResult = -2;
+                selection = 4;
+                editor = preferences.edit();
+                editor.putInt("userSelect", selection);
+                editor.putInt("cpuSelect", cpuSelection);
+                if (selection == cpuSelection) {
+                    wins++;
+                    gameResult = 1;
+                    editor.putInt(GameConstants.SELECTION_WIN, wins);
+                } else {
+                    gameResult = 0;
+                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
+                }
+                editor.apply();
+                listener.onComplete();
+                listener.sendToDb(wins, roundCount, gameResult);
+            }
+        });
+    }
+
 
     public interface OnCompletedListener {
         void onComplete();
