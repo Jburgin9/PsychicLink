@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -37,6 +40,7 @@ public class SecondFragment extends Fragment {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private OnCompletedListener listener;
+    private List<Integer> carsList, musicList, pairsList;
 
     public void setCompletedListener(OnCompletedListener listener) {this.listener = listener;}
 
@@ -78,6 +82,7 @@ public class SecondFragment extends Fragment {
         choice3Iv = view.findViewById(R.id.display_image_3);
         choice4Iv = view.findViewById(R.id.display_image_4);
         preferences = view.getContext().getSharedPreferences(GameConstants.GAME_DATA_PREF, Context.MODE_PRIVATE);
+        setImageArrays();
         return view;
     }
 
@@ -105,26 +110,29 @@ public class SecondFragment extends Fragment {
     }
 
     private void setThemeImages(String theme) {
+        Collections.shuffle(carsList);
+        Collections.shuffle(musicList);
+        Collections.shuffle(pairsList);
         if (theme != null) {
             switch (theme) {
                 case "Cars":
                     //TODO: Get Drawable resource
-                    choice1Iv.setImageResource(R.drawable.car1);
-                    choice2Iv.setImageResource(R.drawable.car2);
-                    choice3Iv.setImageResource(R.drawable.car3);
-                    choice4Iv.setImageResource(R.drawable.car4);
+                        choice1Iv.setImageResource(carsList.get(0));
+                        choice2Iv.setImageResource(carsList.get(1));
+                        choice3Iv.setImageResource(carsList.get(2));
+                        choice4Iv.setImageResource(carsList.get(3));
                     break;
                 case "Music":
-                    choice1Iv.setImageResource(R.drawable.music1);
-                    choice2Iv.setImageResource(R.drawable.music2);
-                    choice3Iv.setImageResource(R.drawable.music3);
-                    choice4Iv.setImageResource(R.drawable.music4);
+                    choice1Iv.setImageResource(musicList.get(0));
+                    choice2Iv.setImageResource(musicList.get(1));
+                    choice3Iv.setImageResource(musicList.get(2));
+                    choice4Iv.setImageResource(musicList.get(3));
                     break;
                 case "Pairs":
-                    choice1Iv.setImageResource(R.drawable.pair1);
-                    choice2Iv.setImageResource(R.drawable.pair2);
-                    choice3Iv.setImageResource(R.drawable.pair3);
-                    choice4Iv.setImageResource(R.drawable.pair4);
+                    choice1Iv.setImageResource(pairsList.get(0));
+                    choice2Iv.setImageResource(pairsList.get(1));
+                    choice3Iv.setImageResource(pairsList.get(2));
+                    choice4Iv.setImageResource(pairsList.get(3));
                     break;
             }
         }
@@ -232,6 +240,29 @@ public class SecondFragment extends Fragment {
                 listener.sendToDb(wins, roundCount, gameResult);
             }
         });
+    }
+
+    public void setImageArrays(){
+        carsList = new ArrayList<>();
+        musicList = new ArrayList<>();
+        pairsList = new ArrayList<>();
+        //Cars Image List
+        carsList.add(R.drawable.car1);
+        carsList.add(R.drawable.car2);
+        carsList.add(R.drawable.car3);
+        carsList.add(R.drawable.car4);
+        //Music Image List
+        musicList.add(R.drawable.music1);
+        musicList.add(R.drawable.music2);
+        musicList.add(R.drawable.music3);
+        musicList.add(R.drawable.music4);
+
+        //Pairs Image List
+        pairsList.add(R.drawable.pair1);
+        pairsList.add(R.drawable.pair2);
+        pairsList.add(R.drawable.pair3);
+        pairsList.add(R.drawable.pair4);
+
     }
 
 
