@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,10 @@ public class ThirdFragment extends Fragment {
     private SQLiteDatabase sqLiteDatabase;
     private GameDatabase gameDatabase;
     private TextView gameAvgTv, gameResultTv;
+    private Button playAgainBtn;
+    private OnPlayAgainSelectedListener selectedListener;
+
+    public void setCompletedListener(OnPlayAgainSelectedListener listener) {selectedListener = listener;}
 
     public static ThirdFragment newInstance() {
         ThirdFragment fragment = new ThirdFragment();
@@ -48,6 +53,7 @@ public class ThirdFragment extends Fragment {
         sqLiteDatabase = gameDatabase.getReadableDatabase();
         gameAvgTv = view.findViewById(R.id.third_frag_avg_tv);
         gameResultTv = view.findViewById(R.id.third_frag_result_tv);
+        playAgainBtn = view.findViewById(R.id.third_frag_play_again_btn);
         return view;
     }
 
@@ -85,5 +91,19 @@ public class ThirdFragment extends Fragment {
 
         cursor.close();
 
+        playAgainAction();
+    }
+
+    public void playAgainAction(){
+        playAgainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedListener.onPlayAgain(true);
+            }
+        });
+    }
+
+    public interface OnPlayAgainSelectedListener{
+        void onPlayAgain(boolean playAgain);
     }
 }

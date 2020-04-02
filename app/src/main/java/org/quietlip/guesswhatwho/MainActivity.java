@@ -17,9 +17,10 @@ import org.quietlip.guesswhatwho.frags.SecondFragment;
 import org.quietlip.guesswhatwho.frags.ThirdFragment;
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener,
-SecondFragment.OnCompletedListener {
+SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
     private GameDatabase gameDatabase;
     private SQLiteDatabase sqLiteDatabase;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ SecondFragment.OnCompletedListener {
         sqLiteDatabase = gameDatabase.getWritableDatabase();
 
         FirstFragment fragment = new FirstFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_frame_layout, fragment);
         transaction.commit();
@@ -45,6 +46,7 @@ SecondFragment.OnCompletedListener {
             secondFragment.setCompletedListener(this);
         } else {
             ThirdFragment thirdFragment = (ThirdFragment) fragment;
+            thirdFragment.setCompletedListener(this);
         }
     }
 
@@ -52,7 +54,6 @@ SecondFragment.OnCompletedListener {
     public void onSelectionMade(String theme) {
         if(!theme.equals("-")) {
             SecondFragment secondFragment = SecondFragment.newInstance(theme);
-            FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.main_frame_layout, secondFragment);
             transaction.addToBackStack("second");
@@ -73,8 +74,7 @@ SecondFragment.OnCompletedListener {
     @Override
     public void onComplete() {
         ThirdFragment fragment = ThirdFragment.newInstance();
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_frame_layout, fragment);
         transaction.addToBackStack("third");
         transaction.commit();
@@ -93,5 +93,13 @@ SecondFragment.OnCompletedListener {
     protected void onDestroy() {
         sqLiteDatabase.close();
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onPlayAgain(boolean playAgain) {
+        if(playAgain){
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
     }
 }
