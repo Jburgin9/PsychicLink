@@ -117,21 +117,4 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/user_guess_et"
-        android:layout_width="125dp"
-        android:layout_height="wrap_content"
-        android:hint="Your Guess?"
-        android:layout_below="@id/image_holder"
-        android:layout_centerInParent="true"
-        android:inputType="number"
-        android:maxLength="1"/>
-
-    <Button
-        android:id="@+id/submit_guess_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit Guess"
-        android:layout_below="@id/user_guess_et"
-        android:layout_centerInParent="true"/>
 </RelativeLayout>
