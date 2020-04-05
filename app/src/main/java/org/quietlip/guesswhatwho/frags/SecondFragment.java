@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +32,6 @@ public class SecondFragment extends Fragment {
     public static final String THEME_KEY = "theme";
     private View view;
     private String theme;
-    private TextView displayTv;
     private ImageView choice1Iv, choice2Iv, choice3Iv, choice4Iv;
     private int cpuSelection, selection;
     private int roundCount, wins;
@@ -76,7 +74,6 @@ public class SecondFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.second_fragment_layout, container, false);
-        displayTv = view.findViewById(R.id.display_frag_header_tv);
         choice1Iv = view.findViewById(R.id.display_image_1);
         choice2Iv = view.findViewById(R.id.display_image_2);
         choice3Iv = view.findViewById(R.id.display_image_3);
@@ -101,7 +98,6 @@ public class SecondFragment extends Fragment {
             }
         });
 
-        displayTv.setText(theme);
         setThemeImages(theme);
         setImage1ClickAction();
         setImage2ClickAction();
@@ -110,6 +106,7 @@ public class SecondFragment extends Fragment {
     }
 
     private void setThemeImages(String theme) {
+        //Use Flickr api to request images and load them into image views.
         Collections.shuffle(carsList);
         Collections.shuffle(musicList);
         Collections.shuffle(pairsList);
@@ -158,8 +155,8 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                     }
                 editor.apply();
-                listener.onComplete();
                 listener.sendToDb(wins, roundCount, gameResult);
+                listener.onComplete();
                 }
         });
     }
@@ -184,8 +181,8 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
                 editor.apply();
-                listener.onComplete();
                 listener.sendToDb(wins, roundCount, gameResult);
+                listener.onComplete();
             }
         });
     }
@@ -210,8 +207,8 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
                 editor.apply();
-                listener.onComplete();
                 listener.sendToDb(wins, roundCount, gameResult);
+                listener.onComplete();
             }
         });
     }
@@ -224,20 +221,21 @@ public class SecondFragment extends Fragment {
 //                if(cpuSelection == 0) cpuSelection = 1;
                 int gameResult = -2;
                 selection = 4;
-                editor = preferences.edit();
-                editor.putInt("userSelect", selection);
-                editor.putInt("cpuSelect", cpuSelection);
+//                editor = preferences.edit();
+//                editor.putInt("userSelect", selection);
+//                editor.putInt("cpuSelect", cpuSelection);
                 if (selection == cpuSelection) {
                     wins++;
                     gameResult = 1;
-                    editor.putInt(GameConstants.SELECTION_WIN, wins);
+//                    editor.putInt(GameConstants.SELECTION_WIN, wins);
                 } else {
                     gameResult = 0;
-                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
+//                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
-                editor.apply();
-                listener.onComplete();
+//                editor.apply();
                 listener.sendToDb(wins, roundCount, gameResult);
+                listener.onComplete();
+
             }
         });
     }

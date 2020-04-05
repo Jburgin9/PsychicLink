@@ -2,13 +2,16 @@ package org.quietlip.guesswhatwho;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.quietlip.guesswhatwho.db.DatabaseContract;
 import org.quietlip.guesswhatwho.db.GameDatabase;
@@ -18,22 +21,33 @@ import org.quietlip.guesswhatwho.frags.ThirdFragment;
 
 public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener,
 SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
+    private static final String TAG = "Main";
     private GameDatabase gameDatabase;
     private SQLiteDatabase sqLiteDatabase;
     private FragmentManager fragmentManager;
+    private MainViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        gameDatabase = new GameDatabase(this);
-        sqLiteDatabase = gameDatabase.getWritableDatabase();
+        openDB();
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        viewModel.init();
+        viewModel.getLiveData().observe(this, response -> {
+            Log.d(TAG, "onCreate: " + response);
+        });
 
         FirstFragment fragment = new FirstFragment();
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_frame_layout, fragment);
         transaction.commit();
+    }
+
+    public void openDB() throws SQLiteException {
+        gameDatabase = new GameDatabase(this);
+        sqLiteDatabase = gameDatabase.getWritableDatabase();
     }
 
     @Override

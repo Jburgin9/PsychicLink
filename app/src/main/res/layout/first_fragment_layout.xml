@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/game_logo_iv"
+        android:layout_width="375dp"
+        android:layout_height="375dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/psychiclogo" />
 
-        <Spinner
-            android:id="@+id/first_fragment_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:prompt="@string/spinner_theme_select"
-            android:entries="@array/spinner_selection"/>
+    <TextView
+        android:id="@+id/spinner_hint_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/game_logo_iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:hint="Choose a theme"
+        android:textSize="20sp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_below="@+id/first_fragment_spinner"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"/>
+    <Spinner
+        android:id="@+id/first_fragment_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/spinner_hint_tv"
+        android:entries="@array/spinner_selection"
+        android:prompt="@string/spinner_theme_select" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/first_fragment_spinner"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Submit" />
 
 
 </RelativeLayout>
