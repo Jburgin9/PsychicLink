@@ -3,118 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <ImageView
         android:id="@+id/display_frag_header_tv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="20dp"
-        android:layout_gravity="center"
-        android:text="SECOND"
-        android:textAlignment="center"
+        android:src="@drawable/psychicq1"
+        android:layout_centerHorizontal="true"
         android:textSize="20sp" />
 
-    <RelativeLayout
-        android:id="@+id/image_holder"
+    <include
+        layout="@layout/selection_images_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <RelativeLayout
-            android:id="@+id/second_frag_rel_display_holder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/display_image_1"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@mipmap/ic_launcher_round" />
-
-                <TextView
-                    android:id="@+id/image_choice1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="1"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/display_image_3"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@mipmap/ic_launcher_round" />
-
-                <TextView
-                    android:id="@+id/image_choice3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="3"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/second_frag_rel_display_holder2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/second_frag_rel_display_holder">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/display_image_2"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@mipmap/ic_launcher_round" />
-
-                <TextView
-                    android:id="@+id/image_choice2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="2"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/display_image_4"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:src="@mipmap/ic_launcher_round" />
-
-                <TextView
-                    android:id="@+id/image_choice4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="4"
-                    android:textStyle="bold"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
-
+        android:layout_below="@id/display_frag_header_tv"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
