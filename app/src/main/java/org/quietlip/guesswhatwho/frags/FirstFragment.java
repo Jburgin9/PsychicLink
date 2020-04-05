@@ -20,11 +20,6 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
     private View view;
     private MainViewModel viewModel;
     private Spinner spinner;
-    private OnThemeSelectedListener selectedListener;
-
-    public void setThemeListener(OnThemeSelectedListener listener){
-        selectedListener = listener;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,14 +45,11 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(this);
-
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        selectedListener = null;
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -66,7 +58,6 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
             selection = parent.getItemAtPosition(position).toString();
             viewModel.selectedItem(selection);
             viewModel.setFragDestination("second");
-//            selectedListener.onSelectionMade(selection);
             parent.setSelection(0);
         }
     }
@@ -76,9 +67,6 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
 
     }
 
-    public interface OnThemeSelectedListener {
-        void onSelectionMade(String theme);
-    }
 
     @Override
     public void onDestroyView() {

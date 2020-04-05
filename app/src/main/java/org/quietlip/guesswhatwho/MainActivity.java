@@ -18,12 +18,13 @@ import org.quietlip.guesswhatwho.frags.FirstFragment;
 import org.quietlip.guesswhatwho.frags.SecondFragment;
 import org.quietlip.guesswhatwho.frags.ThirdFragment;
 
-public class MainActivity extends AppCompatActivity implements FirstFragment.OnThemeSelectedListener,
-SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
+public class MainActivity extends AppCompatActivity implements SecondFragment.OnCompletedListener
+        , ThirdFragment.OnPlayAgainSelectedListener {
     private static final String TAG = "Main";
     private GameDatabase gameDatabase;
     private SQLiteDatabase sqLiteDatabase;
     private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
     private MainViewModel viewModel;
 
     @Override
@@ -33,21 +34,29 @@ SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
         openDB();
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.init();
-        viewModel.getFragNavUpdates().observe(this, fragName -> {
-            if(fragName.equals("secjhjond")){
-                SecondFragment secondFragment = SecondFragment.newInstance("cars");
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_frame_layout, secondFragment);
-                transaction.addToBackStack("second");
-                transaction.commit();
-            }
-        });
-
         FirstFragment fragment = new FirstFragment();
         fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_frame_layout, fragment);
         transaction.commit();
+        viewModel.getFragNavUpdates().observe(this, fragName -> {
+            switch (fragName) {
+                case "second":
+                    SecondFragment secondFragment = SecondFragment.newInstance("cars");
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.main_frame_layout, secondFragment);
+                    transaction.addToBackStack("second");
+                    transaction.commit();
+                    break;
+                case "third":
+                    ThirdFragment thirdFragment = ThirdFragment.newInstance();
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.main_frame_layout, thirdFragment);
+                    transaction.addToBackStack("third");
+                    transaction.commit();
+                    break;
+            }
+        });
     }
 
     public void openDB() throws SQLiteException {
@@ -57,47 +66,26 @@ SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
 
     @Override
     public void onAttachFragment(@NonNull Fragment fragment) {
-        if(fragment instanceof FirstFragment){
-            FirstFragment firstFragment = (FirstFragment) fragment;
-            firstFragment.setThemeListener(this);
-        } else if (fragment instanceof SecondFragment){
+        if (fragment instanceof SecondFragment) {
             SecondFragment secondFragment = (SecondFragment) fragment;
             secondFragment.setCompletedListener(this);
-        } else {
+        } else if (fragment instanceof ThirdFragment) {
             ThirdFragment thirdFragment = (ThirdFragment) fragment;
             thirdFragment.setCompletedListener(this);
         }
     }
 
-    @Override
-    public void onSelectionMade(String theme) {
-        if(!theme.equals("-")) {
-//            SecondFragment secondFragment = SecondFragment.newInstance(theme);
-//            FragmentTransaction transaction = fragmentManager.beginTransaction();
-//            transaction.replace(R.id.main_frame_layout, secondFragment);
-//            transaction.addToBackStack("second");
-//            transaction.commit();
-        }
-    }
 
     @Override
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
-        if(manager.getBackStackEntryCount() != 0){
+        if (manager.getBackStackEntryCount() != 0) {
             manager.popBackStack();
         } else {
             super.onBackPressed();
         }
     }
 
-    @Override
-    public void onComplete() {
-        ThirdFragment fragment = ThirdFragment.newInstance();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.main_frame_layout, fragment);
-        transaction.addToBackStack("third");
-        transaction.commit();
-    }
 
     @Override
     public void sendToDb(int win, int rounds, int gameResult) {
@@ -117,7 +105,7 @@ SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
 
     @Override
     public void onPlayAgain(boolean playAgain) {
-        if(playAgain){
+        if (playAgain) {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
