@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +33,14 @@ SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
         openDB();
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.init();
-        viewModel.getLiveData().observe(this, response -> {
-            Log.d(TAG, "onCreate: " + response);
+        viewModel.getFragNavUpdates().observe(this, fragName -> {
+            if(fragName.equals("secjhjond")){
+                SecondFragment secondFragment = SecondFragment.newInstance("cars");
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.main_frame_layout, secondFragment);
+                transaction.addToBackStack("second");
+                transaction.commit();
+            }
         });
 
         FirstFragment fragment = new FirstFragment();
@@ -67,11 +72,11 @@ SecondFragment.OnCompletedListener, ThirdFragment.OnPlayAgainSelectedListener {
     @Override
     public void onSelectionMade(String theme) {
         if(!theme.equals("-")) {
-            SecondFragment secondFragment = SecondFragment.newInstance(theme);
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.main_frame_layout, secondFragment);
-            transaction.addToBackStack("second");
-            transaction.commit();
+//            SecondFragment secondFragment = SecondFragment.newInstance(theme);
+//            FragmentTransaction transaction = fragmentManager.beginTransaction();
+//            transaction.replace(R.id.main_frame_layout, secondFragment);
+//            transaction.addToBackStack("second");
+//            transaction.commit();
         }
     }
 

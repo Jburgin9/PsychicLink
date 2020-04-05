@@ -11,11 +11,14 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import org.quietlip.guesswhatwho.MainViewModel;
 import org.quietlip.guesswhatwho.R;
 
 public class FirstFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private View view;
+    private MainViewModel viewModel;
     private Spinner spinner;
     private OnThemeSelectedListener selectedListener;
 
@@ -26,6 +29,7 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
     }
 
     @Nullable
@@ -60,7 +64,9 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
         String selection = "";
         if(!parent.getItemAtPosition(position).equals("-")){
             selection = parent.getItemAtPosition(position).toString();
-            selectedListener.onSelectionMade(selection);
+            viewModel.selectedItem(selection);
+            viewModel.setFragDestination("second");
+//            selectedListener.onSelectionMade(selection);
             parent.setSelection(0);
         }
     }
@@ -72,5 +78,10 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
 
     public interface OnThemeSelectedListener {
         void onSelectionMade(String theme);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }
