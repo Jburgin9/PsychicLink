@@ -159,8 +159,7 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                     }
                 editor.apply();
-                listener.sendToDb(wins, roundCount, gameResult);
-                listener.onComplete();
+                viewModel.setFragDestination("third");
                 }
         });
     }
@@ -186,7 +185,7 @@ public class SecondFragment extends Fragment {
                 }
                 editor.apply();
                 listener.sendToDb(wins, roundCount, gameResult);
-                listener.onComplete();
+                viewModel.setFragDestination("third");
             }
         });
     }
@@ -212,7 +211,7 @@ public class SecondFragment extends Fragment {
                 }
                 editor.apply();
                 listener.sendToDb(wins, roundCount, gameResult);
-                listener.onComplete();
+                viewModel.setFragDestination("third");
             }
         });
     }
@@ -238,8 +237,7 @@ public class SecondFragment extends Fragment {
                 }
 //                editor.apply();
                 listener.sendToDb(wins, roundCount, gameResult);
-                listener.onComplete();
-
+                viewModel.setFragDestination("third");
             }
         });
     }
@@ -269,7 +267,6 @@ public class SecondFragment extends Fragment {
 
 
     public interface OnCompletedListener {
-        void onComplete();
         void sendToDb(int win, int rounds, int gameResult);
     }
 
