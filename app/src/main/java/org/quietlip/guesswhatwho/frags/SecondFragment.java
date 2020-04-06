@@ -15,7 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.quietlip.guesswhatwho.MainViewModel;
+import org.quietlip.guesswhatwho.Game;
+import org.quietlip.guesswhatwho.MainViewModelkt;
 import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;
 
@@ -41,7 +42,7 @@ public class SecondFragment extends Fragment {
     private SharedPreferences.Editor editor;
     private OnCompletedListener listener;
     private List<Integer> carsList, musicList, pairsList;
-    private MainViewModel viewModel;
+    private MainViewModelkt viewModel;
 
     public void setCompletedListener(OnCompletedListener listener) {this.listener = listener;}
 
@@ -57,8 +58,8 @@ public class SecondFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        viewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
-        viewModel.getTheme().observe(this, this::setThemeImages);
+        viewModel = new ViewModelProvider(getActivity()).get(MainViewModelkt.class);
+        viewModel.getThemeSelector().observe(this, this::setThemeImages);
 
         if (getArguments() != null) {
             theme = getArguments().getString(THEME_KEY);
@@ -159,7 +160,10 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                     }
                 editor.apply();
-                viewModel.setFragDestination("third");
+                Game game = new Game(selection, cpuSelection, wins, gameResult);
+
+
+                viewModel.setFragDest("third");
                 }
         });
     }
@@ -184,8 +188,10 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
                 editor.apply();
-                listener.sendToDb(wins, roundCount, gameResult);
-                viewModel.setFragDestination("third");
+                Game game = new Game(selection, cpuSelection, wins, gameResult);
+                viewModel.insertGame(game);
+//                listener.sendToDb(wins, roundCount, gameResult);
+                viewModel.setFragDest("third");
             }
         });
     }
@@ -210,8 +216,10 @@ public class SecondFragment extends Fragment {
                     editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
                 editor.apply();
-                listener.sendToDb(wins, roundCount, gameResult);
-                viewModel.setFragDestination("third");
+                Game game = new Game(selection, cpuSelection, wins, gameResult);
+                viewModel.insertGame(game);
+//                listener.sendToDb(wins, roundCount, gameResult);
+                viewModel.setFragDest("third");
             }
         });
     }
@@ -236,8 +244,10 @@ public class SecondFragment extends Fragment {
 //                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
 //                editor.apply();
-                listener.sendToDb(wins, roundCount, gameResult);
-                viewModel.setFragDestination("third");
+                Game game = new Game(selection, cpuSelection, wins, gameResult);
+                viewModel.insertGame(game);
+//                listener.sendToDb(wins, roundCount, gameResult);
+                viewModel.setFragDest("third");
             }
         });
     }

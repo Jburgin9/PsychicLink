@@ -1,23 +1,31 @@
 package org.quietlip.guesswhatwho;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
 
-public class PixabayRepository {
-    private static PixabayRepository repository;
+public class GameRepository {
+    private static GameRepository repository;
     private PixabayApi pixabayApi;
-    Retrofit instance = RetrofitSingleton.getRetrofit();
+    private GameDao gameDAO;
 
-    public PixabayRepository(){
-        pixabayApi = instance.create(PixabayApi.class);
+    private GameRepository(Context context){
+        pixabayApi = RetrofitSingleton.getRetrofit().create(PixabayApi.class);
+        AppDatabase database = AppDatabase.getInstance(context.getApplicationContext());
+        gameDAO = database.gameDAO();
     }
 
-    public MutableLiveData<HitModel> getHits(String search){
+    static GameRepository getInstance(Context context){
+        if (repository == null) repository = new GameRepository(context);
+        return repository;
+    }
+
+    //Pixabay
+    MutableLiveData<HitModel> getHits(String search){
         MutableLiveData<HitModel> responseData = new MutableLiveData<>();
         pixabayApi.getHits().enqueue(new Callback<Response>() {
             @Override
@@ -33,9 +41,8 @@ public class PixabayRepository {
         return responseData;
     }
 
-    public static PixabayRepository getInstance(){
-        if (repository == null) repository = new PixabayRepository();
-        return repository;
+    //GameDatabase
+    void addGame(Game game){
+        gameDAO.insert(game);
     }
-
 }

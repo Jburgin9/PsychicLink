@@ -13,18 +13,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.quietlip.guesswhatwho.MainViewModel;
+import org.quietlip.guesswhatwho.MainViewModelkt;
 import org.quietlip.guesswhatwho.R;
 
 public class FirstFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private View view;
-    private MainViewModel viewModel;
+    private MainViewModelkt viewModel;
     private Spinner spinner;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(getActivity()).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(getActivity()).get(MainViewModelkt.class);
     }
 
     @Nullable
@@ -51,13 +51,14 @@ public class FirstFragment extends Fragment implements AdapterView.OnItemSelecte
     public void onDetach() {
         super.onDetach();
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String selection = "";
         if(!parent.getItemAtPosition(position).equals("-")){
             selection = parent.getItemAtPosition(position).toString();
             viewModel.selectedItem(selection);
-            viewModel.setFragDestination("second");
+            viewModel.setFragDest("second");
             parent.setSelection(0);
         }
     }
