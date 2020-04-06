@@ -25,21 +25,22 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     private SQLiteDatabase sqLiteDatabase;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
-    private MainViewModel viewModel;
+    private MainViewModelkt viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         openDB();
-        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.init();
+        viewModel = new ViewModelProvider(this).get(MainViewModelkt.class);
+//        viewModel.passingContextBAD(this);
         FirstFragment fragment = new FirstFragment();
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.main_frame_layout, fragment);
         transaction.commit();
-        viewModel.getFragNavUpdates().observe(this, fragName -> {
+        viewModel.init(this);
+        viewModel.getFragSelector().observe(this, fragName -> {
             switch (fragName) {
                 case "second":
                     SecondFragment secondFragment = SecondFragment.newInstance("cars");
