@@ -1,8 +1,5 @@
 package org.quietlip.guesswhatwho;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,27 +9,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.quietlip.guesswhatwho.db.DatabaseContract;
-import org.quietlip.guesswhatwho.db.GameDatabase;
 import org.quietlip.guesswhatwho.frags.FirstFragment;
 import org.quietlip.guesswhatwho.frags.SecondFragment;
 import org.quietlip.guesswhatwho.frags.ThirdFragment;
 
-public class MainActivity extends AppCompatActivity implements SecondFragment.OnCompletedListener
-        , ThirdFragment.OnPlayAgainSelectedListener {
-    private static final String TAG = "Main";
-    private GameDatabase gameDatabase;
-    private SQLiteDatabase sqLiteDatabase;
+public class MainActivity extends AppCompatActivity implements ThirdFragment.OnPlayAgainSelectedListener {
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
-    private MainViewModelkt viewModel;
+    private GameViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        openDB();
-        viewModel = new ViewModelProvider(this).get(MainViewModelkt.class);
+        viewModel = new ViewModelProvider(this).get(GameViewModel.class);
 //        viewModel.passingContextBAD(this);
         FirstFragment fragment = new FirstFragment();
         fragmentManager = getSupportFragmentManager();
@@ -60,17 +50,9 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         });
     }
 
-    public void openDB() throws SQLiteException {
-        gameDatabase = new GameDatabase(this);
-        sqLiteDatabase = gameDatabase.getWritableDatabase();
-    }
-
     @Override
     public void onAttachFragment(@NonNull Fragment fragment) {
-        if (fragment instanceof SecondFragment) {
-            SecondFragment secondFragment = (SecondFragment) fragment;
-            secondFragment.setCompletedListener(this);
-        } else if (fragment instanceof ThirdFragment) {
+        if (fragment instanceof ThirdFragment) {
             ThirdFragment thirdFragment = (ThirdFragment) fragment;
             thirdFragment.setCompletedListener(this);
         }
@@ -85,22 +67,6 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         } else {
             super.onBackPressed();
         }
-    }
-
-
-    @Override
-    public void sendToDb(int win, int rounds, int gameResult) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.GameEntry.COLUMN_NAME_WINS, win);
-        values.put(DatabaseContract.GameEntry.COLUMN_NAME_ROUNDS, rounds);
-        values.put(DatabaseContract.GameEntry.COLUMN_NAME_GUESS_RESULT, gameResult);
-        sqLiteDatabase.insert(DatabaseContract.GameEntry.TABLE_NAME, null, values);
-    }
-
-    @Override
-    protected void onDestroy() {
-        sqLiteDatabase.close();
-        super.onDestroy();
     }
 
 

@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.quietlip.guesswhatwho.models.Game;
-import org.quietlip.guesswhatwho.MainViewModelkt;
+import org.quietlip.guesswhatwho.GameViewModel;
 import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;
 
@@ -37,14 +37,10 @@ public class SecondFragment extends Fragment {
     private String theme;
     private ImageView choice1Iv, choice2Iv, choice3Iv, choice4Iv;
     private int cpuSelection, selection;
-    private int roundCount, wins;
+    private int wins;
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
-    private OnCompletedListener listener;
     private List<Integer> carsList, musicList, pairsList;
-    private MainViewModelkt viewModel;
-
-    public void setCompletedListener(OnCompletedListener listener) {this.listener = listener;}
+    private GameViewModel viewModel;
 
     public static SecondFragment newInstance(String theme) {
         SecondFragment fragment = new SecondFragment();
@@ -58,7 +54,7 @@ public class SecondFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        viewModel = new ViewModelProvider(getActivity()).get(MainViewModelkt.class);
+        viewModel = new ViewModelProvider(getActivity()).get(GameViewModel.class);
         viewModel.getThemeSelector().observe(this, this::setThemeImages);
 
         if (getArguments() != null) {
@@ -66,12 +62,6 @@ public class SecondFragment extends Fragment {
         }
         Random rando = new Random();
         cpuSelection = rando.nextInt(3);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        listener = null;
     }
 
     @Nullable
@@ -92,7 +82,6 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(preferences.contains(GameConstants.ROUND_COUNT) && preferences.contains(GameConstants.SELECTION_WIN)){
-            roundCount = preferences.getInt(GameConstants.ROUND_COUNT, 0);
             wins = preferences.getInt(GameConstants.SELECTION_WIN, 0);
         }
 //        choice1Iv.setOnClickListener(this);
@@ -144,25 +133,16 @@ public class SecondFragment extends Fragment {
         choice1Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roundCount++;
-//                if(cpuSelection == 0) cpuSelection = 1;
                 int gameResult = -2;
                 selection = 1;
-                editor = preferences.edit();
-                editor.putInt("userSelect", selection);
-                editor.putInt("cpuSelect", cpuSelection);
                 if (selection == cpuSelection) {
                     wins++;
                     gameResult = 1;
-                    editor.putInt(GameConstants.SELECTION_WIN, wins);
                     } else {
                     gameResult = 0;
-                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                     }
-                editor.apply();
                 Game game = new Game(selection, cpuSelection, wins, gameResult);
-
-
+                viewModel.insertGame(game);
                 viewModel.setFragDest("third");
                 }
         });
@@ -172,25 +152,16 @@ public class SecondFragment extends Fragment {
         choice2Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roundCount++;
-//                if(cpuSelection == 0) cpuSelection = 1;
                 int gameResult = -2;
                 selection = 2;
-                editor = preferences.edit();
-                editor.putInt("userSelect", selection);
-                editor.putInt("cpuSelect", cpuSelection);
                 if (selection == cpuSelection) {
                     wins++;
                     gameResult = 1;
-                    editor.putInt(GameConstants.SELECTION_WIN, wins);
                 } else {
                     gameResult = 0;
-                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
-                editor.apply();
                 Game game = new Game(selection, cpuSelection, wins, gameResult);
                 viewModel.insertGame(game);
-//                listener.sendToDb(wins, roundCount, gameResult);
                 viewModel.setFragDest("third");
             }
         });
@@ -200,25 +171,16 @@ public class SecondFragment extends Fragment {
         choice3Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roundCount++;
-//                if(cpuSelection == 0) cpuSelection = 1;
                 int gameResult = -2;
                 selection = 3;
-                editor = preferences.edit();
-                editor.putInt("userSelect", selection);
-                editor.putInt("cpuSelect", cpuSelection);
                 if (selection == cpuSelection) {
                     wins++;
                     gameResult = 1;
-                    editor.putInt(GameConstants.SELECTION_WIN, wins);
                 } else {
                     gameResult = 0;
-                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
-                editor.apply();
                 Game game = new Game(selection, cpuSelection, wins, gameResult);
                 viewModel.insertGame(game);
-//                listener.sendToDb(wins, roundCount, gameResult);
                 viewModel.setFragDest("third");
             }
         });
@@ -228,25 +190,16 @@ public class SecondFragment extends Fragment {
         choice4Iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                roundCount++;
-//                if(cpuSelection == 0) cpuSelection = 1;
                 int gameResult = -2;
                 selection = 4;
-//                editor = preferences.edit();
-//                editor.putInt("userSelect", selection);
-//                editor.putInt("cpuSelect", cpuSelection);
                 if (selection == cpuSelection) {
                     wins++;
                     gameResult = 1;
-//                    editor.putInt(GameConstants.SELECTION_WIN, wins);
                 } else {
                     gameResult = 0;
-//                    editor.putInt(GameConstants.ROUND_COUNT, roundCount);
                 }
-//                editor.apply();
                 Game game = new Game(selection, cpuSelection, wins, gameResult);
                 viewModel.insertGame(game);
-//                listener.sendToDb(wins, roundCount, gameResult);
                 viewModel.setFragDest("third");
             }
         });
@@ -273,11 +226,6 @@ public class SecondFragment extends Fragment {
         pairsList.add(R.drawable.pair3);
         pairsList.add(R.drawable.pair4);
 
-    }
-
-
-    public interface OnCompletedListener {
-        void sendToDb(int win, int rounds, int gameResult);
     }
 
 }

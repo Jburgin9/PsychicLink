@@ -3,12 +3,14 @@ package org.quietlip.guesswhatwho
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import org.quietlip.guesswhatwho.db.AppDatabase
+import kotlinx.coroutines.launch
+import org.quietlip.guesswhatwho.db.GameDatabase
 import org.quietlip.guesswhatwho.models.Game
 import org.quietlip.guesswhatwho.models.Hit
 
-class MainViewModelkt : ViewModel() {
+class GameViewModel : ViewModel() {
     val liveData = MutableLiveData<Hit>()
     val themeSelector = MutableLiveData<String>()
     val fragSelector = MutableLiveData<String>()
@@ -17,7 +19,7 @@ class MainViewModelkt : ViewModel() {
     fun init(c: Context){
         if(!liveData.hasObservers()){
             Repository.init(c.applicationContext)
-            Room.databaseBuilder(c, AppDatabase::class.java, "game.db").build()
+            Room.databaseBuilder(c, GameDatabase::class.java, "game.db").build()
         }
 
     }
@@ -29,7 +31,7 @@ class MainViewModelkt : ViewModel() {
         fragSelector.value = fragNum
     }
 
-    fun insertGame(game: Game) {
+    fun insertGame(game: Game) = viewModelScope.launch {
         repo.addGame(game)
     }
 
