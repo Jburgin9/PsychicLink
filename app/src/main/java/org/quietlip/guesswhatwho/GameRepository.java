@@ -1,9 +1,16 @@
 package org.quietlip.guesswhatwho;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+
+import org.quietlip.guesswhatwho.db.AppDatabase;
+import org.quietlip.guesswhatwho.db.GameDao;
+import org.quietlip.guesswhatwho.models.Game;
+import org.quietlip.guesswhatwho.models.Hit;
+import org.quietlip.guesswhatwho.models.Response;
+import org.quietlip.guesswhatwho.network.PixabayApi;
+import org.quietlip.guesswhatwho.network.RetrofitSingleton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,12 +32,12 @@ public class GameRepository {
     }
 
     //Pixabay
-    MutableLiveData<HitModel> getHits(String search){
-        MutableLiveData<HitModel> responseData = new MutableLiveData<>();
+    MutableLiveData<Hit> getHits(String search){
+        MutableLiveData<Hit> responseData = new MutableLiveData<>();
         pixabayApi.getHits().enqueue(new Callback<Response>() {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                Log.d("Main", "onResponse: " + response.body().hits);
+            //Log.d("Main", "onResponse: " + response.body().hits);
             }
 
             @Override

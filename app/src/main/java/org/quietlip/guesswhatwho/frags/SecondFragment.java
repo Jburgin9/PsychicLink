@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.quietlip.guesswhatwho.Game;
+import org.quietlip.guesswhatwho.models.Game;
 import org.quietlip.guesswhatwho.MainViewModelkt;
 import org.quietlip.guesswhatwho.R;
 import org.quietlip.guesswhatwho.utilis.GameConstants;

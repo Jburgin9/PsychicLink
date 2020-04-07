@@ -1,4 +1,4 @@
-package org.quietlip.guesswhatwho;
+package org.quietlip.guesswhatwho.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
