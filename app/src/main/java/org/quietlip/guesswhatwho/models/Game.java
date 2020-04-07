@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Game {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int round;
 
     @ColumnInfo(name = "user_guess")

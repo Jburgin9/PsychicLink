@@ -13,18 +13,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.quietlip.guesswhatwho.MainViewModelkt;
+import org.quietlip.guesswhatwho.GameViewModel;
 import org.quietlip.guesswhatwho.R;
 
 public class FirstFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private View view;
-    private MainViewModelkt viewModel;
+    private GameViewModel viewModel;
     private Spinner spinner;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(getActivity()).get(MainViewModelkt.class);
+        viewModel = new ViewModelProvider(getActivity()).get(GameViewModel.class);
     }
 
     @Nullable
