@@ -1,4 +1,4 @@
-package org.quietlip.guesswhatwho;
+package org.quietlip.guesswhatwho.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

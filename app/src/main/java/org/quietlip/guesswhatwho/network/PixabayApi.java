@@ -1,4 +1,6 @@
-package org.quietlip.guesswhatwho;
+package org.quietlip.guesswhatwho.network;
+
+import org.quietlip.guesswhatwho.models.Response;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
